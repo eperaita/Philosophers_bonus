@@ -6,7 +6,7 @@
 /*   By: eperaita <eperaita@student.42urduliz.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 13:02:17 by eperaita          #+#    #+#             */
-/*   Updated: 2021/12/17 19:17:33 by eperaita         ###   ########.fr       */
+/*   Updated: 2022/01/03 13:47:45 by eperaita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -20,11 +20,19 @@
 static void	mom(t_table *table, pid_t *pids)
 {
 	int		i;
+	int		status;
 
-	waitpid(-1, NULL, 0);
 	i = -1;
 	while (++i < table->nphilo)
-		kill(pids[i], SIGKILL);
+	{
+		waitpid(-1, &status, 0);
+		if (status != 0)
+		{
+			i = -1;
+			while (++i < table->nphilo)
+				kill(pids[i], SIGKILL);
+		}
+	}
 }
 
 static int	philo_childs(t_table *table)
